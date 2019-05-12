@@ -1,14 +1,25 @@
 package project;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class MyCITS2200Project implements CITS2200Project {
 
-    private ArrayList<ArrayList<Integer>> adjacencyList; //Single source of truth
+    private List<List<Integer>> adjacencyList; //Single source of truth
     private int[][] edgeMatrix;
     private boolean edgeMatrixUpToDate; //safeguarding
 
+    private HashMap<Integer, String> intToStrMap;
+    private HashMap<String, Integer> strToIntMap;
 
-    public MyCITS2200Project ()  {}
+    public MyCITS2200Project ()  {
+        adjacencyList = new ArrayList<>();
+        intToStrMap = new HashMap<>();
+        strToIntMap = new HashMap<>();
+        edgeMatrix = new int[0][0];
+        edgeMatrixUpToDate = true;
+    }
 
 
     /**
@@ -18,8 +29,29 @@ public class MyCITS2200Project implements CITS2200Project {
      * @param urlFrom the URL which has a link to urlTo.
      * @param urlTo the URL which urlFrom has a link to.
      */
+
+    //Strings are keys or ints are keys. I think strings.
     public void addEdge(String urlFrom, String urlTo) {
-        return;
+        edgeMatrixUpToDate = false; //unless it is a duplicate edge
+        Integer intFrom = strToIntMap.get(urlFrom);
+        Integer intTo = strToIntMap.get(urlTo);
+
+        if (intFrom == null) {
+            intFrom = intToStrMap.size(); //we can use size because we are never deleting edges
+            intToStrMap.put(intFrom, urlFrom); //therefore we can assume the number mappings are 0 -> size() - 1
+            strToIntMap.put(urlFrom, intFrom); //it will also correspond to i in the edgeMatrix and i in
+            adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
+
+        }
+        if (intTo == null) {
+            intTo = strToIntMap.size();
+            intToStrMap.put(intTo, urlTo);
+            strToIntMap.put(urlTo, intTo);
+            adjacencyList.add(new ArrayList<>(5));
+        }
+
+        adjacencyList.get(intFrom).add(intTo);
+
     }
 
     /**
