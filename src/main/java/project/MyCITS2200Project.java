@@ -1,6 +1,12 @@
 package project;
+import java.util.ArrayList;
 
 public class MyCITS2200Project implements CITS2200Project {
+
+    private ArrayList<ArrayList<Integer>> adjacencyList; //Single source of truth
+    private int[][] edgeMatrix;
+    private boolean edgeMatrixUpToDate; //safeguarding
+
 
     public MyCITS2200Project ()  {}
 
