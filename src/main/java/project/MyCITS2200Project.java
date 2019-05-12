@@ -32,7 +32,7 @@ public class MyCITS2200Project implements CITS2200Project {
 
     //Strings are keys or ints are keys. I think strings.
     public void addEdge(String urlFrom, String urlTo) {
-        edgeMatrixUpToDate = false; //unless it is a duplicate edge
+        edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
         Integer intFrom = strToIntMap.get(urlFrom);
         Integer intTo = strToIntMap.get(urlTo);
 
@@ -41,7 +41,6 @@ public class MyCITS2200Project implements CITS2200Project {
             intToStrMap.put(intFrom, urlFrom); //therefore we can assume the number mappings are 0 -> size() - 1
             strToIntMap.put(urlFrom, intFrom); //it will also correspond to i in the edgeMatrix and i in
             adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
-
         }
         if (intTo == null) {
             intTo = strToIntMap.size();
@@ -51,7 +50,6 @@ public class MyCITS2200Project implements CITS2200Project {
         }
 
         adjacencyList.get(intFrom).add(intTo);
-
     }
 
     /**
