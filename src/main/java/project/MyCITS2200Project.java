@@ -32,7 +32,7 @@ public class MyCITS2200Project implements CITS2200Project {
     //TODO duplicate edge and empty string input, not "wiki/"
     //O(1) method
     public void addEdge(String urlFrom, String urlTo) {
-        if (urlFrom == null || urlTo == null) { return; }
+        if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("") || urlFrom.equals(urlTo)) { return; }
 
         edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
         Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)

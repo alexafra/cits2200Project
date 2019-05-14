@@ -14,6 +14,7 @@ import java.util.ArrayList;
 //src/test/projectTestData/edge
 //src/test/projectTestData/matrix
 
+//Test empty ans null strings
 public class AddEdgesTest {
     private MyCITS2200Project graph0;
     private MyCITS2200Project graph1;
@@ -119,6 +120,31 @@ public class AddEdgesTest {
         assertThat(graph5.adjacencyList.equals(expectedList)).isTrue();
         assertThat(graph6.adjacencyList.size()).isEqualTo(2);
         assertThat(graph6.adjacencyList.equals(expectedList)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Test empty strings")
+    public void testEmptyNullStrings() {
+        Integer[][] expectedArray = {};
+        List<List<Integer>> expectedList = new ArrayList<>();
+        MyCITS2200Project graph = new MyCITS2200Project();
+        graph.addEdge("","");
+        graph.addEdge(null, null);
+
+        assertThat(graph.adjacencyList.size()).isEqualTo(0);
+        assertThat(graph.adjacencyList.equals(expectedList)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Test node connected to itself")
+    public void testNodeConnectedToItself() {
+        Integer[][] expectedArray = {};
+        List<List<Integer>> expectedList = new ArrayList<>();
+        MyCITS2200Project graph = new MyCITS2200Project();
+        graph.addEdge("a","a");
+
+        assertThat(graph.adjacencyList.size()).isEqualTo(0);
+        assertThat(graph.adjacencyList.equals(expectedList)).isTrue();
     }
 }
 
