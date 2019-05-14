@@ -1,17 +1,15 @@
 package project;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.ToDoubleBiFunction;
 
 public class MyCITS2200Project implements CITS2200Project {
 
-    private List<List<Integer>> adjacencyList; //Single source of truth
-    private int[][] edgeMatrix;
-    private boolean edgeMatrixUpToDate; //safeguarding
+    List<List<Integer>> adjacencyList; //Single source of truth
+    int[][] edgeMatrix;
+    boolean edgeMatrixUpToDate; //safeguarding
 
-    private HashMap<Integer, String> intToStrMap;
-    private HashMap<String, Integer> strToIntMap;
+    HashMap<Integer, String> intToStrMap;
+    HashMap<String, Integer> strToIntMap;
 
     public MyCITS2200Project ()  {
         adjacencyList = new ArrayList<>();
@@ -31,10 +29,12 @@ public class MyCITS2200Project implements CITS2200Project {
      */
 
     //Strings are keys or ints are keys. I think strings.
+    //TODO duplicate edge and empty string input, not "wiki/"
+    //O(1) method
     public void addEdge(String urlFrom, String urlTo) {
         edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
-        Integer intFrom = strToIntMap.get(urlFrom);
-        Integer intTo = strToIntMap.get(urlTo);
+        Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)
+        Integer intTo = strToIntMap.get(urlTo);                             //O(1)
 
         if (intFrom == null) {
             intFrom = intToStrMap.size(); //we can use size because we are never deleting edges
@@ -43,13 +43,13 @@ public class MyCITS2200Project implements CITS2200Project {
             adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
         }
         if (intTo == null) {
-            intTo = strToIntMap.size();
-            intToStrMap.put(intTo, urlTo);
-            strToIntMap.put(urlTo, intTo);
-            adjacencyList.add(new ArrayList<>(5));
+            intTo = strToIntMap.size();                                     //O(1)
+            intToStrMap.put(intTo, urlTo);                                  //O(1)
+            strToIntMap.put(urlTo, intTo);                                  //O(1)
+            adjacencyList.add(new ArrayList<>(5));              //O(1)??
         }
 
-        adjacencyList.get(intFrom).add(intTo);
+        adjacencyList.get(intFrom).add(intTo);                              //O(1) + O(1)
     }
 
     /**
@@ -61,8 +61,59 @@ public class MyCITS2200Project implements CITS2200Project {
      * @return the legnth of the shorest path in number of links followed.
      */
     public int getShortestPath(String urlFrom, String urlTo) {
-        return 0;
-    }
+        Integer source = strToIntMap.get(urlFrom);                          //O(1)
+        Integer destination = strToIntMap.get(urlTo);                       //O(1)
+
+        //If the urls are not in the graph
+        if (source == null || destination == null) {                        //O(1)
+            return -1;                                                      //O(1)
+        }
+
+        int numVertices = this.adjacencyList.size();                        //O(1)
+
+        int[] distances = new int[numVertices];                             //O(V)
+        int[] parent = new int[numVertices];                                //O(V)
+
+        int[] colour = new int[numVertices];                                //O(V)
+
+        for (int i = 0; i < parent.length; i ++) {                          //O(2 * V) = O(v)
+            distances[i] = -1;                                              //O(1)
+            colour[i] = 0;
+        }
+
+        //this queue is the primary data structure used in this method.
+        //We probably want a heap queue so as to make insertion and deletion O(log(n))
+        Queue<Integer> queue = new LinkedList<Integer>();        // O(1)
+
+        queue.add(source);      //O(1) because queue is empty
+        colour[source] = 1;     //O(1)
+        distances[source] = 0;  //O(1)
+
+        while (!queue.isEmpty()) {                                          //O(V) * {}
+            int current = queue.remove();                                       //O(log (1))
+            if (current == destination) {                                       //O(1)
+                return distances[current];                                      //O(1)
+            }
+            List<Integer> adjacentVertices = adjacencyList.get(current);        //O(1)
+            int numEdges = adjacentVertices.size();
+            for (int i = 0; i < numEdges; i++) {                               //O(|E|) * {}
+                if (colour[i] == 0) {                                               //O(1)
+                    colour[i] = 1;                                                  //O(1)
+                    distances[i] = distances[current] + 1;                          //O(1)
+                    queue.add(i);                                                   //O(log(1)),
+                    //{} =  O((4*O(1)) = O(log(1))
+                }                                                               //=> O(E)
+            }
+            colour[current] = 2;                                                //O(1)
+        }                                                                   //{} = O(E)
+                                                                            //O(V*E) = O(V^3)
+        return -1;
+    }                                                                       //O(1)
+                                                                            //=>O(V*E = O(V^3)
+    //Loosest bound loosest analysis, a closer look will show that each edge is is observed once in O(1) time O(E)
+    //Furthermore each vertex is added to the queue once, taking O(log 1) time and removed once taking O(log(1)) time
+    //Suggesting time taken is O(E + V)
+
 
 
     /**
