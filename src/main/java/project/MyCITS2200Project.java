@@ -83,11 +83,11 @@ public class MyCITS2200Project implements CITS2200Project {
 
         //this queue is the primary data structure used in this method.
         //We probably want a heap queue so as to make insertion and deletion O(log(n))
-        Queue<Integer> queue = new LinkedList<Integer>();        // O(1)
+        Queue<Integer> queue = new LinkedList<Integer>();                   // O(1)
 
-        queue.add(source);      //O(1) because queue is empty
-        colour[source] = 1;     //O(1)
-        distances[source] = 0;  //O(1)
+        queue.add(source);                                                  //O(1) because queue is empty
+        colour[source] = 1;                                                 //O(1)
+        distances[source] = 0;                                              //O(1)
 
         while (!queue.isEmpty()) {                                          //O(V) * {}
             int current = queue.remove();                                       //O(log (1))
