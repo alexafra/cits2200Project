@@ -32,6 +32,8 @@ public class MyCITS2200Project implements CITS2200Project {
     //TODO duplicate edge and empty string input, not "wiki/"
     //O(1) method
     public void addEdge(String urlFrom, String urlTo) {
+        if (urlFrom == null || urlTo == null) { return; }
+
         edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
         Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)
         Integer intTo = strToIntMap.get(urlTo);                             //O(1)
@@ -159,4 +161,47 @@ public class MyCITS2200Project implements CITS2200Project {
     public String[] getHamiltonianPath() {
         return new String[0];
     }
+
+    public String graphToMatrixString() {
+        int numVertices = this.adjacencyList.size();
+        String delimiter = " ";
+        StringBuffer var1 = new StringBuffer(numVertices + "\n");
+
+        for(int i = 0; i < numVertices; ++i) {
+            List<Integer> nodeI = adjacencyList.get(i);
+            Collections.sort(nodeI);
+            int k = 0;
+            for(int j = 0; j < numVertices; ++j) {
+                if (k < nodeI.size() && j == nodeI.get(k)) {
+                    var1.append(1);
+                    k++;
+                } else {
+                    var1.append(0);
+                }
+                var1.append(delimiter);
+            }
+            var1.append("\n");
+        }
+        return var1.toString();
+    }
+
+    public String graphToEdgeString() {
+
+        int numVertices = this.adjacencyList.size();
+        StringBuffer edgeString = new StringBuffer(numVertices + "\n");
+
+        for(int i = 0; i < numVertices; ++i) {
+            List<Integer> edgesOfI = this.adjacencyList.get(i);
+            for(int j = 0; j < edgesOfI.size(); ++j) {
+                int startNode = i;
+                int endNode = edgesOfI.get(j);
+                edgeString.append(intToStrMap.get(startNode));
+                edgeString.append("\n");
+                edgeString.append(intToStrMap.get(endNode));
+                edgeString.append("\n");
+            }
+        }
+        return edgeString.toString();
+    }
+
 }

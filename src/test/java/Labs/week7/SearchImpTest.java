@@ -25,7 +25,7 @@ public class SearchImpTest {
     @BeforeEach
     public void init () throws Exception {
         search = new SearchImp();
-        String fileBase = "src/test/testData/GraphInput";
+        String fileBase = "src/test/labTestData/GraphInput";
         String postFix = ".txt";
         graph1 = Graph.readFile(fileBase + 1 +  postFix, true, true);
         graph2 = Graph.readFile(fileBase + 2 + postFix, true, true);

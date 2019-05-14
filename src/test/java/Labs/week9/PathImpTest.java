@@ -23,7 +23,7 @@ public class PathImpTest {
     @BeforeEach
     public void init () throws Exception {
         path = new PathImp();
-        String fileBase = "src/test/testData/GraphInput";
+        String fileBase = "src/test/labTestData/GraphInput";
         String postFix = ".txt";
         graph0 = Graph.readFile(fileBase + 0 + postFix, true, false);
 
