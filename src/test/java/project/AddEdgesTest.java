@@ -14,6 +14,8 @@ import java.util.ArrayList;
 //src/test/projectTestData/edge
 //src/test/projectTestData/matrix
 
+//Perhaps test from the start => end point
+
 //Test empty ans null strings
 public class AddEdgesTest {
     private MyCITS2200Project graph0;

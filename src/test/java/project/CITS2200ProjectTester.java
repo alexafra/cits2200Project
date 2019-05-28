@@ -61,7 +61,7 @@ public class CITS2200ProjectTester {
     public static void main(String[] args) {
 
         MyCITS2200Project proj0 = new MyCITS2200Project();
-        String pathToGraphFile = "src/test/projectTestData/edge2.txt";
+        String pathToGraphFile = "src/test/projectTestData/edge77.txt";
         loadEdges(proj0, pathToGraphFile);
         String matrix0 = proj0.graphToMatrixString(); //NOTE graph matrices are NOT unique NP hard no. graphs for a solution.
         System.out.println("Your matrix equivalent is: ");

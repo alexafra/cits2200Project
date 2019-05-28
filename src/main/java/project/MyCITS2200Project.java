@@ -31,7 +31,7 @@ public class MyCITS2200Project implements CITS2200Project {
     //Strings are keys or ints are keys. I think strings.
     //TODO duplicate edge and empty string input, not "wiki/"
     //O(1) method
-    public void addEdge(String urlFrom, String urlTo) {
+    public void addEdge(String urlFrom, String urlTo) { //cant test multiple, can test singles
         if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("") || urlFrom.equals(urlTo)) { return; }
 
         edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
@@ -62,7 +62,7 @@ public class MyCITS2200Project implements CITS2200Project {
      * @param urlTo the URL where the path should end.
      * @return the legnth of the shorest path in number of links followed.
      */
-    public int getShortestPath(String urlFrom, String urlTo) {
+    public int getShortestPath(String urlFrom, String urlTo) {              //how to test this? maybe use other code.
         Integer source = strToIntMap.get(urlFrom);                          //O(1)
         Integer destination = strToIntMap.get(urlTo);                       //O(1)
 
@@ -71,7 +71,7 @@ public class MyCITS2200Project implements CITS2200Project {
             return -1;                                                      //O(1)
         }
 
-        int numVertices = this.adjacencyList.size();                        //O(1)
+        int numVertices = this.adjacencyList.size();                        //O(1) Pretty sure
 
         int[] distances = new int[numVertices];                             //O(V)
         int[] parent = new int[numVertices];                                //O(V)
@@ -84,7 +84,7 @@ public class MyCITS2200Project implements CITS2200Project {
         }
 
         //this queue is the primary data structure used in this method.
-        //We probably want a heap queue so as to make insertion and deletion O(log(n))
+        //O(1) operations when accessing the ends and no priority
         Queue<Integer> queue = new LinkedList<Integer>();                   // O(1)
 
         queue.add(source);                                                  //O(1) because queue is empty
@@ -114,7 +114,7 @@ public class MyCITS2200Project implements CITS2200Project {
                                                                             //=>O(V*E = O(V^3)
     //Loosest bound loosest analysis, a closer look will show that each edge is is observed once in O(1) time O(E)
     //Furthermore each vertex is added to the queue once, taking O(log 1) time and removed once taking O(log(1)) time
-    //Suggesting time taken is O(E + V)
+    //Suggesting time taken is O(E + V) => O(2E))
 
 
 
@@ -128,8 +128,7 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public String[] getCenters() {
         return new String[0];
-    }
-
+    } //Test by building out
 
     /**
      * Finds all the strongly connected components of the page graph.
@@ -143,7 +142,7 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public String[][] getStronglyConnectedComponents() {
         return new String[0][0];
-    }
+    } //Test by building out
 
 
     /**
@@ -160,7 +159,7 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public String[] getHamiltonianPath() {
         return new String[0];
-    }
+    } //test by looping back through the parent array
 
     public String graphToMatrixString() {
         int numVertices = this.adjacencyList.size();
