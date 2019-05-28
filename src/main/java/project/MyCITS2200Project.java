@@ -150,13 +150,17 @@ public class MyCITS2200Project implements CITS2200Project {
 
                 //Find the shortest path between i and j strings
                 int iShortestPath = getShortestPath(jUrl, iUrl);
-                if (iShortestPath > longestPathArray[j]) {
+                if(iShortestPath == -1) {
+                    //If the vertex cannot be reached, then it cannot be a center
+                    longestPathArray[j] = -1;
+                    break;
+                } else if (iShortestPath > longestPathArray[j]) {
                     longestPathArray[j] = iShortestPath;
                 }
             }
 
             //See if this longest path is the smallest, ie. it is a possible center
-            if(longestPathArray[j] <= currentCenterLength) currentCenterLength = longestPathArray[j];
+            if(longestPathArray[j] <= currentCenterLength && longestPathArray[j] != -1) currentCenterLength = longestPathArray[j];
 
         }
 
@@ -195,7 +199,30 @@ public class MyCITS2200Project implements CITS2200Project {
      * @return an array containing every strongly connected component.
      */
     public String[][] getStronglyConnectedComponents() {
+
+        //Run a DFS on the original adjacency list
+        //Push vertexes onto the stack in the order that you traverse
+        //Transpose our adjacency matrix...(or use it if we've already created it in addEdge()
+        //Run a DFS on the transpose list
+
+//        //Create a stack
+//        Stack stack = new Stack();
+//        //Find the number of vertices in our graph
+//        int size = adjacencyList.size();
+//        //Visited will track whether or not we have visited the vertex in the past
+//        boolean[] visited = new boolean[size];
+//
+//        //Make all vertices unvisited
+//        for(int i = 0; i < size; i++) {
+//            visited[i] = false;
+//        }
+
         return new String[0][0];
+
+
+
+
+
     } //Test by building out
 
 
