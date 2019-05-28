@@ -127,7 +127,61 @@ public class MyCITS2200Project implements CITS2200Project {
      * @return an array containing all the URLs that correspond to pages that are centers.
      */
     public String[] getCenters() {
-        return new String[0];
+
+        //CURRENTLY DOES NOT IGNORE ANY VERTICES THAT HAVE NO EDGES COMING OUT OF THEM
+        //NOT CURRENTLY SURE WHAT TO DO WITH THESE, AND WHICH CASES SHOULD BE IGNORED
+
+        int graphSize = adjacencyList.size();
+        int[] longestPathArray = new int[graphSize];
+        int currentCenterLength = Integer.MAX_VALUE;
+        ArrayList<Integer> centerList = new ArrayList<>();
+
+        //Loop through all the vertices
+        for(int j = 0; j < graphSize; j++) {
+
+            //Get corresponding url string
+            String jUrl = intToStrMap.get(j);
+
+            //For a single vertex in the List, find the longest ShortestPath to any other vertex
+            for (int i = 0; i < graphSize; i++) {
+
+                //Get corresponding url string
+                String iUrl = intToStrMap.get(i);
+
+                //Find the shortest path between i and j strings
+                int iShortestPath = getShortestPath(jUrl, iUrl);
+                if (iShortestPath > longestPathArray[j]) {
+                    longestPathArray[j] = iShortestPath;
+                }
+            }
+
+            //See if this longest path is the smallest, ie. it is a possible center
+            if(longestPathArray[j] <= currentCenterLength) currentCenterLength = longestPathArray[j];
+
+        }
+
+        //Add every vertex which is a center to centerList
+        for(int i = 0; i < graphSize; i++) {
+            if(longestPathArray[i] == currentCenterLength) {
+                centerList.add(i);
+            }
+        }
+
+        //Now we transfer our centers ArrayList into a String[] array
+
+        //Find the size of the arrayList
+        int numberOfCenters = centerList.size();
+        //Create a new String[] array
+        String[] centers = new String[numberOfCenters];
+
+        for(int i = 0; i < numberOfCenters; i++) {
+            //Find the corresponding urlString
+            String centerUrl = intToStrMap.get(centerList.get(i));
+            //Add it to the String[] array
+            centers[i] = centerUrl;
+        }
+
+        return centers;
     } //Test by building out
 
     /**
