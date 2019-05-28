@@ -99,10 +99,11 @@ public class MyCITS2200Project implements CITS2200Project {
             List<Integer> adjacentVertices = adjacencyList.get(current);        //O(1)
             int numEdges = adjacentVertices.size();
             for (int i = 0; i < numEdges; i++) {                               //O(|E|) * {}
-                if (colour[i] == 0) {                                               //O(1)
-                    colour[i] = 1;                                                  //O(1)
-                    distances[i] = distances[current] + 1;                          //O(1)
-                    queue.add(i);                                                   //O(log(1)),
+                int adjacent = adjacentVertices.get(i);                                     //O(1)
+                if (colour[adjacent] == 0) {                                               //O(1)
+                    colour[adjacent] = 1;                                                  //O(1)
+                    distances[adjacent] = distances[current] + 1;                          //O(1)
+                    queue.add(adjacent);                                                   //O(log(1)),
                     //{} =  O((4*O(1)) = O(log(1))
                 }                                                               //=> O(E)
             }
