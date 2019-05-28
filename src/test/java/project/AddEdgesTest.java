@@ -61,12 +61,11 @@ public class AddEdgesTest {
         CITS2200ProjectTester.loadEdges(graph4, pathBase + 4 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph5, pathBase + 5 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph6, pathBase + 6 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph44, pathBase + 4 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph55, pathBase + 5 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph66, pathBase + 6 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph77, pathBase + 7 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph88, pathBase + 8 + pathSuffix);
-        CITS2200ProjectTester.loadEdges(graph99, pathBase + 9 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph44, pathBase + 44 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph55, pathBase + 55 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph66, pathBase + 66 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph77, pathBase + 77 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph88, pathBase + 88 + pathSuffix);
     }
 
     @Test
@@ -127,7 +126,7 @@ public class AddEdgesTest {
     @Test
     @DisplayName("Test empty strings")
     public void testEmptyNullStrings() {
-        Integer[][] expectedArray = {};
+        Integer[][] expectedArray = {{0}};
         List<List<Integer>> expectedList = new ArrayList<>();
         MyCITS2200Project graph = new MyCITS2200Project();
         graph.addEdge("","");
@@ -140,12 +139,15 @@ public class AddEdgesTest {
     @Test
     @DisplayName("Test node connected to itself")
     public void testNodeConnectedToItself() {
-        Integer[][] expectedArray = {};
+        Integer[][] expectedArray = {{0}};
         List<List<Integer>> expectedList = new ArrayList<>();
+        for (Integer[] array : expectedArray) {
+            expectedList.add(Arrays.asList(array));
+        }
         MyCITS2200Project graph = new MyCITS2200Project();
         graph.addEdge("a","a");
 
-        assertThat(graph.adjacencyList.size()).isEqualTo(0);
+        assertThat(graph.adjacencyList.size()).isEqualTo(1);
         assertThat(graph.adjacencyList.equals(expectedList)).isTrue();
     }
 }

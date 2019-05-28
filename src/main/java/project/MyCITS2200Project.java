@@ -32,18 +32,17 @@ public class MyCITS2200Project implements CITS2200Project {
     //TODO duplicate edge and empty string input, not "wiki/"
     //O(1) method
     public void addEdge(String urlFrom, String urlTo) { //cant test multiple, can test singles
-        if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("") || urlFrom.equals(urlTo)) { return; }
+        if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("")) { return; }
 
         edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
         Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)
-        Integer intTo = strToIntMap.get(urlTo);                             //O(1)
-
         if (intFrom == null) {
             intFrom = intToStrMap.size(); //we can use size because we are never deleting edges
             intToStrMap.put(intFrom, urlFrom); //therefore we can assume the number mappings are 0 -> size() - 1
             strToIntMap.put(urlFrom, intFrom); //it will also correspond to i in the edgeMatrix and i in
             adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
         }
+        Integer intTo = strToIntMap.get(urlTo);                             //O(1) Integer intTo = strToIntMap.get(urlTo);                             //O(1)
         if (intTo == null) {
             intTo = strToIntMap.size();                                     //O(1)
             intToStrMap.put(intTo, urlTo);                                  //O(1)
