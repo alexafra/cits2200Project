@@ -5,6 +5,7 @@ import java.util.function.ToDoubleBiFunction;
 public class MyCITS2200Project implements CITS2200Project {
 
     List<List<Integer>> adjacencyList; //Single source of truth
+    List<List<Integer>> tAdjacencyList; //The transpose adjacency list needed for getStronglyConnected()
     int[][] edgeMatrix;
     boolean edgeMatrixUpToDate; //safeguarding
 
@@ -13,6 +14,7 @@ public class MyCITS2200Project implements CITS2200Project {
 
     public MyCITS2200Project ()  {
         adjacencyList = new ArrayList<>();
+        tAdjacencyList = new ArrayList<>();
         intToStrMap = new HashMap<>();
         strToIntMap = new HashMap<>();
         edgeMatrix = new int[0][0];
@@ -41,16 +43,21 @@ public class MyCITS2200Project implements CITS2200Project {
             intToStrMap.put(intFrom, urlFrom); //therefore we can assume the number mappings are 0 -> size() - 1
             strToIntMap.put(urlFrom, intFrom); //it will also correspond to i in the edgeMatrix and i in
             adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
+            tAdjacencyList.add(new ArrayList<>(5));
         }
         Integer intTo = strToIntMap.get(urlTo);                             //O(1) Integer intTo = strToIntMap.get(urlTo);                             //O(1)
         if (intTo == null) {
             intTo = strToIntMap.size();                                     //O(1)
             intToStrMap.put(intTo, urlTo);                                  //O(1)
             strToIntMap.put(urlTo, intTo);                                  //O(1)
-            adjacencyList.add(new ArrayList<>(5));              //O(1)??
+            adjacencyList.add(new ArrayList<>(5)); //O(1)??
+            tAdjacencyList.add(new ArrayList<>(5));
         }
 
         adjacencyList.get(intFrom).add(intTo);                              //O(1) + O(1)
+        tAdjacencyList.get(intTo).add(intFrom);     //add the opposite of the original adjacencyList
+        //ALEX IF YOU THINK THIS IS INEFFICIENT, TO ADD EVERYTHING TO THE transposeAdjacencyList, THEN SEE IF YOU CAN
+        //THINK OF A WAY TO COMPUTE A TRANSPOSE FROM THE ORIGINAL ADJACENCY LIST
     }
 
     /**
@@ -189,6 +196,46 @@ public class MyCITS2200Project implements CITS2200Project {
     } //Test by building out
 
     /**
+     * Runs a DFS on the transposed adjacencyList
+     * It should update the String[][] with the vertices that are strongly connected
+     */
+    public void transposeDFS(boolean[] visited, int vertex,  List<List<Integer>> stringAList, int count) {
+
+        //Set the vertex to visited
+        visited[vertex] = true;
+
+        for(int i = 0; i < tAdjacencyList.get(vertex).size(); i++) {
+            //Check if any neighbours of our vertex can be reached and havent been visited
+            //They are part of SCC
+            if(!visited[tAdjacencyList.get(vertex).get(i)]) {
+                transposeDFS(visited, tAdjacencyList.get(vertex).get(i), stringAList, count);
+            }
+        }
+
+        //Add the vertex to the ArrayList of SCC
+        stringAList.get(count).add(vertex);
+
+    }
+
+    /**
+     * Runs a recursive DFS on the non-transposed graph
+     * Will add elements to the stack in the correct order and update
+     * the visited boolean array
+     */
+    public void fillOrder(boolean[] visited, int vertex, Stack stack) {
+
+        visited[vertex] = true;
+        int size = adjacencyList.get(vertex).size();
+
+        for(int i = 0; i < size; i++) {
+            if(visited[adjacencyList.get(vertex).get(i)] == false) {
+                fillOrder(visited, adjacencyList.get(vertex).get(i), stack);
+            }
+        }
+        stack.push(vertex);
+    }
+
+    /**
      * Finds all the strongly connected components of the page graph.
      * Every strongly connected component can be represented as an array
      * containing the page URLs in the component. The return value is thus an array
@@ -205,23 +252,61 @@ public class MyCITS2200Project implements CITS2200Project {
         //Transpose our adjacency matrix...(or use it if we've already created it in addEdge()
         //Run a DFS on the transpose list
 
-//        //Create a stack
-//        Stack stack = new Stack();
-//        //Find the number of vertices in our graph
-//        int size = adjacencyList.size();
-//        //Visited will track whether or not we have visited the vertex in the past
-//        boolean[] visited = new boolean[size];
-//
-//        //Make all vertices unvisited
+        List<List<Integer>> stringAList = new ArrayList<>();
+        int count = 0;
+        int vertex = 0;
+        Stack stack = new Stack();
+        //Find the number of vertices in our graph
+        int size = adjacencyList.size();
+        //Visited will track whether or not we have visited the vertex in the past
+        boolean[] visited = new boolean[size];
+
+        //NO NEED TO DO THIS AS JAVA BOOLEANS DEFAULT INIT TO FALSE
+        //Make all vertices unvisited
 //        for(int i = 0; i < size; i++) {
 //            visited[i] = false;
 //        }
 
-        return new String[0][0];
+        //Go through the graph and find the order of vertices that our DFS produces
+        for(int i = 0; i < size; i++) {
+            if(visited[i] == false) {
+                fillOrder(visited, i, stack);
+            }
+        }
 
+        //Make everything unvisited again
+        for(int i = 0; i < size; i++) {
+            visited[i] = false;
+        }
 
+        //Go through our transpose graph, and see what vertices are unvisited and connected
+        //These will be part of our SCC
+        while(stack.empty() == false) {
+            vertex = (int)stack.pop();
+            if(visited[vertex] == false) {
+                //Create a new ArrayList to hold the current set of SCCs
+                stringAList.add(new ArrayList(5));
+                //This should only exit once it has found all connected+unvisited neighbours, ie SCCs
+                transposeDFS(visited, vertex, stringAList, count);
+                //Increase our count, so we add the next elements to the next ArrayList
+                count++;
+            }
+        }
 
+        //Find the size of our ArrayList, which is the number of sets of SCC
+        int array1Dsize = stringAList.size();
+        String[][] sccStrings = new String[array1Dsize][];
 
+        //Copy the ArrayList into a 2D String Array
+        for(int i = 0; i < array1Dsize; i++) {
+            sccStrings[i] = new String[stringAList.get(i).size()];
+            for(int j = 0; j < stringAList.get(i).size(); j++) {
+                String tempString = intToStrMap.get(stringAList.get(i).get(j));
+                sccStrings[i][j] = tempString;
+            }
+        }
+
+        return sccStrings;
 
     } //Test by building out
 
