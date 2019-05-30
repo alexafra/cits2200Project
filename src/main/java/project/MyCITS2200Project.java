@@ -1,6 +1,12 @@
 package project;
-import java.util.*;
-import java.util.function.ToDoubleBiFunction;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.Collections;
+import java.lang.Boolean;
 
 public class MyCITS2200Project implements CITS2200Project {
 
@@ -31,7 +37,6 @@ public class MyCITS2200Project implements CITS2200Project {
      */
 
     //Strings are keys or ints are keys. I think strings.
-    //TODO duplicate edge and empty string input, not "wiki/"
     //O(1) method
     public void addEdge(String urlFrom, String urlTo) { //cant test multiple, can test singles
         if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("")) { return; }
@@ -324,8 +329,70 @@ public class MyCITS2200Project implements CITS2200Project {
      * @return a Hamiltonian path of the page graph.
      */
     public String[] getHamiltonianPath() {
-        return new String[0];
-    } //test by looping back through the parent array
+        int numVertices = adjacencyList.size();
+        int numSets = 1<<numVertices;
+
+        boolean[][] adjacencyMatrix = new boolean[10][10];
+
+        boolean dp[][] = new boolean[numVertices][numSets];
+
+        //Set everything to false
+        for (int vertex = 0; vertex < numVertices; ++vertex) {
+            for (int set = 0; set < numSets; ++set ) {
+                dp[vertex][set] = false;
+            }
+        }
+
+        //initialise trivial cases to true (sets of size 1)
+        for (int vertex = 0; vertex < numVertices; ++vertex) {
+            dp[vertex][1<<vertex] = true;
+        }
+
+
+        for (int set = 0; set < numSets; ++set) {
+            for (int vertex = 0; vertex < numVertices; ++vertex) {
+                if (((1 << vertex) & set) != 0) {
+                    int previousSet = set - (1 << vertex); // S - {c}
+                    //D(S, c) == D(s- c, 1)&a[1][c] || D(s - c, 2)&a[2][c] ... || D(s - c, x)&a[2][x]
+                    //we want dp[vertex][set]
+                    for (int x = 0; x < numVertices; ++x) { // D(S-{c}, x)
+                        if (dp[vertex][set]) {
+                            break;
+                        }
+                        dp[vertex][set] = dp[x][previousSet] & adjacencyMatrix[x][vertex]; //should be matrix
+                    }
+                }
+            }
+        }
+
+        int lastNodeInHamiltonian = -1;
+        for (int vertex = 0; vertex < numVertices; ++vertex) {
+            if (dp[vertex][1<<numVertices - 1]) {
+                lastNodeInHamiltonian = vertex;
+                break;
+            }
+        }
+
+        String[] hamiltonianPath = new String[numVertices];
+        if (lastNodeInHamiltonian == -1) {
+            return hamiltonianPath;
+        } else {
+            int set = numSets - 1;
+            for (int i = 0; i < numVertices; ++i) {
+                for (int j = 0; j < numVertices; ++j) {
+                    if (dp[j][set] == true) {
+                        hamiltonianPath[numVertices - 1 - i] = intToStrMap.get(j);
+                        set = set - (1<<j);
+                        break;
+                    }
+
+                }
+            }
+        }
+        return hamiltonianPath;
+    }
+
+    //test by looping back through the parent array
 
     public String graphToMatrixString() {
         int numVertices = this.adjacencyList.size();
