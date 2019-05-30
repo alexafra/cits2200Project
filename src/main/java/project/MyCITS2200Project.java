@@ -13,7 +13,6 @@ public class MyCITS2200Project implements CITS2200Project {
     List<List<Integer>> adjacencyList; //Single source of truth
     List<List<Integer>> tAdjacencyList; //The transpose adjacency list needed for getStronglyConnected()
     int[][] edgeMatrix;
-    boolean edgeMatrixUpToDate; //safeguarding
 
     HashMap<Integer, String> intToStrMap;
     HashMap<String, Integer> strToIntMap;
@@ -24,7 +23,6 @@ public class MyCITS2200Project implements CITS2200Project {
         intToStrMap = new HashMap<>();
         strToIntMap = new HashMap<>();
         edgeMatrix = new int[0][0];
-        edgeMatrixUpToDate = true;
     }
 
 
@@ -41,7 +39,6 @@ public class MyCITS2200Project implements CITS2200Project {
     public void addEdge(String urlFrom, String urlTo) { //cant test multiple, can test singles
         if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("")) { return; }
 
-        edgeMatrixUpToDate = false; //unless it is a duplicate edge TODO
         Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)
         if (intFrom == null) {
             intFrom = intToStrMap.size(); //we can use size because we are never deleting edges
@@ -320,29 +317,26 @@ public class MyCITS2200Project implements CITS2200Project {
         int numVertices = adjacencyList.size();
         int numSets = 1<<numVertices;
 
-        boolean[][] adjacencyMatrix = new boolean[10][10];
+        boolean[][] adjacencyMatrix = generateAdjacencyMatrix();
 
+        //dp[row][column] represents if a hamiltonian path exists in the subset that links all the vertices in that subset
+        //that includes the vertex and ends at that vertex.
+
+        //Each cell is made of a subset (column no.) and an end vertex (row no.).
+        //A cell with true means that there is a path that connects each vertex in the
+        //subset and ends at the end vertex, with the end vertex must be included in the subset.
         boolean dp[][] = new boolean[numVertices][numSets];
-
-        //Set everything to false
-        for (int vertex = 0; vertex < numVertices; ++vertex) {
-            for (int set = 0; set < numSets; ++set ) {
-                dp[vertex][set] = false;
-            }
-        }
 
         //initialise trivial cases to true (sets of size 1)
         for (int vertex = 0; vertex < numVertices; ++vertex) {
             dp[vertex][1<<vertex] = true;
         }
 
-
+        //Recursive step
         for (int set = 0; set < numSets; ++set) {
             for (int vertex = 0; vertex < numVertices; ++vertex) {
                 if (((1 << vertex) & set) != 0) {
-                    int previousSet = set - (1 << vertex); // S - {c}
-                    //D(S, c) == D(s- c, 1)&a[1][c] || D(s - c, 2)&a[2][c] ... || D(s - c, x)&a[2][x]
-                    //we want dp[vertex][set]
+                    int previousSet = set & ~(1 << vertex); //If the end vertex isn't in the set
                     for (int x = 0; x < numVertices; ++x) { // D(S-{c}, x)
                         if (dp[vertex][set]) {
                             break;
@@ -353,34 +347,55 @@ public class MyCITS2200Project implements CITS2200Project {
             }
         }
 
-        int lastNodeInHamiltonian = -1;
+        boolean hamiltonianExists = false;
         for (int vertex = 0; vertex < numVertices; ++vertex) {
-            if (dp[vertex][1<<numVertices - 1]) {
-                lastNodeInHamiltonian = vertex;
+            if (dp[vertex][numSets - 1]) {
+                hamiltonianExists = true;
                 break;
             }
         }
 
-        String[] hamiltonianPath = new String[numVertices];
-        if (lastNodeInHamiltonian == -1) {
-            return hamiltonianPath;
-        } else {
+        String[] hamiltonianPath;
+        if (hamiltonianExists) {
+            hamiltonianPath = new String[numVertices];
             int set = numSets - 1;
             for (int i = 0; i < numVertices; ++i) {
                 for (int j = 0; j < numVertices; ++j) {
-                    if (dp[j][set] == true) {
+                    if (dp[j][set]) {
                         hamiltonianPath[numVertices - 1 - i] = intToStrMap.get(j);
-                        set = set - (1<<j);
+                        set = set & ~(1<<j);
                         break;
                     }
-
                 }
             }
+        } else {
+            hamiltonianPath = new String[0];
         }
         return hamiltonianPath;
     }
 
+
     //test by looping back through the parent array
+    public boolean[][] generateAdjacencyMatrix() {
+        int numVertices = adjacencyList.size();
+        boolean[][] adjacencyMatrix = new boolean[numVertices][numVertices];
+
+
+        for (int i = 0; i < numVertices; i ++) {
+            for (int j = 0; j < numVertices; j ++) {
+                adjacencyMatrix[i][j] = false;
+            }
+
+        }
+        for (int i = 0; i < numVertices; i ++) {
+            List<Integer> adjacentNodes = adjacencyList.get(i);
+            for (int j = 0; j < adjacentNodes.size(); j ++) {
+                adjacencyMatrix[i][adjacentNodes.get(j)] = true;
+            }
+        }
+
+        return adjacencyMatrix;
+    }
 
     public String graphToMatrixString() {
         int numVertices = this.adjacencyList.size();
