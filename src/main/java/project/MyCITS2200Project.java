@@ -125,7 +125,47 @@ public class MyCITS2200Project implements CITS2200Project {
     //Furthermore each vertex is added to the queue once, taking O(log 1) time and removed once taking O(log(1)) time
     //Suggesting time taken is O(E + V) => O(2E))
 
+    /**
+     * Perform a BFS on the graph
+     *
+     */
+    public int BFS(int vertex) {
 
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[adjacencyList.size()];
+        //Contains distance from
+        int[] distance = new int[adjacencyList.size()];
+        //Set all vertices as unreachable until reached
+        for(int i = 0; i < adjacencyList.size(); i++) {
+            distance[i] = -1;
+        }
+        distance[vertex] = 0;
+        visited[vertex] = true;
+
+        q.add(vertex);
+
+        while(!q.isEmpty()) {
+            int nextVertex = q.remove();
+            for(int i = 0; i < adjacencyList.get(nextVertex).size(); i++) {
+                int neighbourVertex = adjacencyList.get(nextVertex).get(i);
+                if(!visited[neighbourVertex]) {
+                    visited[neighbourVertex] = true;
+                    //This is the distance from the original vertex
+                    distance[neighbourVertex] = distance[nextVertex] + 1;
+                    q.add(neighbourVertex);
+                }
+            }
+        }
+        int maxLength = -1;
+        //Run through our graph, and make maxLength into the largest path length
+        for(int i = 0; i < adjacencyList.size(); i++) {
+            if(distance[i] > maxLength) maxLength = distance[i];
+            //If there is no path, tell getCenters() that it is not eligible to be a center
+            if(distance[i] == -1) return -1;
+        }
+
+        return maxLength;
+    }
 
     /**
      * Finds all the centers of the page graph. The order of pages
@@ -138,60 +178,31 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public String[] getCenters() {
 
-        int graphSize = adjacencyList.size();
-        int[] longestPathArray = new int[graphSize];
-        int currentCenterLength = Integer.MAX_VALUE;
-        ArrayList<Integer> centerList = new ArrayList<>();
-
-        //Loop through all the vertices
-        for(int j = 0; j < graphSize; j++) {
-
-            //Get corresponding url string
-            String jUrl = intToStrMap.get(j);
-
-            //For a single vertex in the List, find the longest ShortestPath to any other vertex
-            for (int i = 0; i < graphSize; i++) {
-
-                //Get corresponding url string
-                String iUrl = intToStrMap.get(i);
-
-                //Find the shortest path between i and j strings
-                int iShortestPath = getShortestPath(jUrl, iUrl);
-                if(iShortestPath == -1) {
-                    //If the vertex cannot be reached, then it cannot be a center
-                    longestPathArray[j] = -1;
-                    break;
-                } else if (iShortestPath > longestPathArray[j]) {
-                    longestPathArray[j] = iShortestPath;
-                }
+        //An array which will hold the longest "shortest path" between the vertices a vertex can reach
+        int[] centerLengths = new int[adjacencyList.size()];
+        int minCenterLength = Integer.MAX_VALUE;
+        //Run a BFS on every vertex to find the longest "shortest path"
+        for(int i = 0; i < adjacencyList.size(); i++) {
+            centerLengths[i] = BFS(i);
+            //If our BFS tells us a vertex cannot reach another vertex, it cannot be a center
+            if(centerLengths[i] < minCenterLength && centerLengths[i] != -1) {
+                minCenterLength = centerLengths[i];
             }
-
-            //See if this longest path is the smallest, ie. it is a possible center
-            if(longestPathArray[j] <= currentCenterLength && longestPathArray[j] != -1) currentCenterLength = longestPathArray[j];
-
         }
-
-        //Add every vertex which is a center to centerList
-        for(int i = 0; i < graphSize; i++) {
-            if(longestPathArray[i] == currentCenterLength) {
+        //Add our centers to an ArrayList
+        ArrayList<Integer> centerList = new ArrayList<>();
+        for(int i = 0; i < adjacencyList.size(); i++) {
+            //If there longest "shortest path" is the minimum possible in this graph, add to arrayList
+            if(centerLengths[i] == minCenterLength) {
                 centerList.add(i);
             }
         }
-
-        //Now we transfer our centers ArrayList into a String[] array
-
-        //Find the size of the arrayList
-        int numberOfCenters = centerList.size();
-        //Create a new String[] array
-        String[] centers = new String[numberOfCenters];
-
-        for(int i = 0; i < numberOfCenters; i++) {
-            //Find the corresponding urlString
-            String centerUrl = intToStrMap.get(centerList.get(i));
-            //Add it to the String[] array
-            centers[i] = centerUrl;
+        //Find the String equivalent and add to a String[]
+        String[] centers = new String[centerList.size()];
+        for(int i = 0; i < centerList.size(); i++) {
+            String centerString = intToStrMap.get(centerList.get(i));
+            centers[i] = centerString;
         }
-
         return centers;
     }
 
