@@ -130,7 +130,9 @@ public class MyCITS2200Project implements CITS2200Project {
 
     /**
      * Perform a BFS on the graph
-     *
+     * @param vertex is the vertex to search from
+     * @return the distance of the furthest vertex from the initial vertex
+     * or -1 if any vertices cannot be reached
      */
     public int BFS(int vertex) {
 
