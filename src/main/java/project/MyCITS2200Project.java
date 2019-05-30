@@ -137,11 +137,9 @@ public class MyCITS2200Project implements CITS2200Project {
      * are in the array.
      *
      * @return an array containing all the URLs that correspond to pages that are centers.
+     * When no centers can be found, an empty String[] is @returned
      */
     public String[] getCenters() {
-
-        //CURRENTLY DOES NOT IGNORE ANY VERTICES THAT HAVE NO EDGES COMING OUT OF THEM
-        //NOT CURRENTLY SURE WHAT TO DO WITH THESE, AND WHICH CASES SHOULD BE IGNORED
 
         int graphSize = adjacencyList.size();
         int[] longestPathArray = new int[graphSize];
@@ -198,7 +196,7 @@ public class MyCITS2200Project implements CITS2200Project {
         }
 
         return centers;
-    } //Test by building out
+    }
 
     /**
      * Runs a DFS on the transposed adjacencyList
@@ -252,27 +250,17 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public String[][] getStronglyConnectedComponents() {
 
-        //Run a DFS on the original adjacency list
-        //Push vertexes onto the stack in the order that you traverse
-        //Transpose our adjacency matrix...(or use it if we've already created it in addEdge()
-        //Run a DFS on the transpose list
-
         List<List<Integer>> stringAList = new ArrayList<>();
         int count = 0;
-        int vertex = 0;
+        int vertex;
         Stack stack = new Stack();
         //Find the number of vertices in our graph
         int size = adjacencyList.size();
         //Visited will track whether or not we have visited the vertex in the past
         boolean[] visited = new boolean[size];
 
-        //NO NEED TO DO THIS AS JAVA BOOLEANS DEFAULT INIT TO FALSE
-        //Make all vertices unvisited
-//        for(int i = 0; i < size; i++) {
-//            visited[i] = false;
-//        }
-
         //Go through the graph and find the order of vertices that our DFS produces
+        //Will push vertices on a stack
         for(int i = 0; i < size; i++) {
             if(visited[i] == false) {
                 fillOrder(visited, i, stack);
@@ -313,7 +301,7 @@ public class MyCITS2200Project implements CITS2200Project {
 
         return sccStrings;
 
-    } //Test by building out
+    }
 
 
     /**

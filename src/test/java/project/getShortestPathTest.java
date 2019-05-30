@@ -16,6 +16,7 @@ public class getShortestPathTest {
     private MyCITS2200Project graph13;
     private MyCITS2200Project graph14;
     private MyCITS2200Project graph15;
+    private MyCITS2200Project graph16;
 
     private String pathBase;
     private String pathSuffix;
@@ -28,6 +29,7 @@ public class getShortestPathTest {
         graph13 = new MyCITS2200Project();
         graph14 = new MyCITS2200Project();
         graph15 = new MyCITS2200Project();
+        graph16 = new MyCITS2200Project();
 
         pathBase = "src/test/projectTestData/edge";
         pathSuffix = ".txt";
@@ -38,6 +40,7 @@ public class getShortestPathTest {
         CITS2200ProjectTester.loadEdges(graph13, pathBase + 13 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph14, pathBase + 14 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph15, pathBase + 15 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph16, pathBase + 16 + pathSuffix);
     }
 
     @Test
@@ -96,7 +99,11 @@ public class getShortestPathTest {
         assertThat(graph15.getShortestPath("a", "g")).isEqualTo(4);
     }
 
-
+    @Test
+    @DisplayName("Test Empty Graph")
+    public void testEmpty() {
+        assertThat(graph16.getShortestPath("a", "b")).isEqualTo(-1);
+    }
 
 //    @Test
 //    @DisplayName("Test Large Graph")

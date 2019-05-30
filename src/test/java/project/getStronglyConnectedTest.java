@@ -12,7 +12,7 @@ public class getStronglyConnectedTest {
     private MyCITS2200Project graph30;
     private MyCITS2200Project graph31;
     private MyCITS2200Project graph32;
-//    private MyCITS2200Project graph23;
+    private MyCITS2200Project graph33;
 //    private MyCITS2200Project graph24;
 //    private MyCITS2200Project graph25;
 
@@ -24,9 +24,9 @@ public class getStronglyConnectedTest {
         graph30 = new MyCITS2200Project();
         graph31 = new MyCITS2200Project();
         graph32 = new MyCITS2200Project();
-//        graph23 = new MyCITS2200Project();
-//        graph24 = new MyCITS2200Project();
-//        graph25 = new MyCITS2200Project();
+        graph33 = new MyCITS2200Project();
+//        graph34 = new MyCITS2200Project();
+//        graph35 = new MyCITS2200Project();
 
         pathBase = "src/test/projectTestData/edge";
         pathSuffix = ".txt";
@@ -34,9 +34,9 @@ public class getStronglyConnectedTest {
         CITS2200ProjectTester.loadEdges(graph30, pathBase + 30 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph31, pathBase + 31 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph32, pathBase + 32 + pathSuffix);
-//        CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
-//        CITS2200ProjectTester.loadEdges(graph24, pathBase + 24 + pathSuffix);
-//        CITS2200ProjectTester.loadEdges(graph25, pathBase + 25 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph33, pathBase + 33 + pathSuffix);
+//        CITS2200ProjectTester.loadEdges(graph34, pathBase + 34 + pathSuffix);
+//        CITS2200ProjectTester.loadEdges(graph35, pathBase + 35 + pathSuffix);
     }
 
     @Test
@@ -65,6 +65,14 @@ public class getStronglyConnectedTest {
         String[][] string2 = new String[][] {{"d", "c"},{"b", "a"}};
 
         assertThat(graph32.getStronglyConnectedComponents()).isEqualTo(string2);
+    }
+
+    @Test
+    @DisplayName("No SSC Graph")
+    public void testNoConnected() {
+        String[][] string =  new String[][] {{"d"},{"c"},{"b"},{"a"}};
+
+        assertThat(graph33.getStronglyConnectedComponents()).isEqualTo(string);
     }
 }
 
