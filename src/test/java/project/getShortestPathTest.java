@@ -105,12 +105,6 @@ public class getShortestPathTest {
         assertThat(graph16.getShortestPath("a", "b")).isEqualTo(-1);
     }
 
-//    @Test
-//    @DisplayName("Test Large Graph")
-//    public void testGetShortestLarge() {
-//
-//    }
-
 
 
 }
