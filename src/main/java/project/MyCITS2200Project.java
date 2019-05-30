@@ -155,6 +155,10 @@ public class MyCITS2200Project implements CITS2200Project {
 
                 //Find the shortest path between i and j strings
                 int iShortestPath = getShortestPath(jUrl, iUrl);
+                if(iShortestPath > currentCenterLength) {
+                    longestPathArray[j] = -1;
+                    break;
+                }
                 if(iShortestPath == -1) {
                     //If the vertex cannot be reached, then it cannot be a center
                     longestPathArray[j] = -1;
