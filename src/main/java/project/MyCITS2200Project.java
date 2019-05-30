@@ -330,49 +330,66 @@ public class MyCITS2200Project implements CITS2200Project {
 
         boolean[][] adjacencyMatrix = generateAdjacencyMatrix();
 
-        //dp[row][column] represents if a hamiltonian path exists in the subset that links all the vertices in that subset
-        //that includes the vertex and ends at that vertex.
+        /*
+         * There are 2^n * n states in my memoization table. Each state is either true or false.
+         * A unique state is defined by a set of vertices S and an extra vertex v.
+         * A state is set to true if:
+         * 1) There is a path found that visits each node in the subset S once
+         * 2) The final node of the path is the extra vertex v.
+         * 3) Only the nodes in the subset can be used
+         * 4) To satisfy (3) v must be a member of S.
+         *
+         * In short each state represents if the program has calculated if there is a hamiltonian path
+         * in set S that ends at vertex v where v is a member of S.
+         */
+        boolean dp[][] = new boolean[numSets][numVertices];
 
-        //Each cell is made of a subset (column no.) and an end vertex (row no.).
-        //A cell with true means that there is a path that connects each vertex in the
-        //subset and ends at the end vertex, with the end vertex must be included in the subset.
-        boolean dp[][] = new boolean[numVertices][numSets];
-
-        //initialise trivial cases to true (sets of size 1)
+        /*
+         * Initialise trivial cases to true.
+         * A trivial case is when the set of vertices S contains only vertex v it finishes at.
+         * Thus the set S necessarily has a hamiltonian path ending at v.
+         * Note that the null set (when set = 0) is always false, because v is never a member of the null set.
+         */
         for (int vertex = 0; vertex < numVertices; ++vertex) {
-            dp[vertex][1<<vertex] = true;
+            dp[1<<vertex][vertex] = true;
         }
 
-        //Recursive step
+        /*
+         * Our strategy for traversing the memoization table is to traverse each set completely, one at a time from
+         * 0 ... (2^N - 1). This is because any sets with dependencies are dependent on sets smaller than them.
+         * Thus larger subproblems can be built from smaller subproblems by traversing from set 0 to set (2^N - 1).
+         * Larger subproblems D(S, c) are built from smaller subproblems as follows:
+         * D(S, c) = ( (D(S-{c}, 0) & A[0][c]) || (D(S-{c}, 1) & A[1][c]) || ... ||  (D(S-{c}, N - 1) & A[N - 1][c]) )
+         */
         for (int set = 0; set < numSets; ++set) {
             for (int vertex = 0; vertex < numVertices; ++vertex) {
-                if (((1 << vertex) & set) != 0) {
-                    int previousSet = set & ~(1 << vertex); //If the end vertex isn't in the set
-                    for (int x = 0; x < numVertices; ++x) { // D(S-{c}, x)
-                        if (dp[vertex][set]) {
-                            break;
-                        }
-                        dp[vertex][set] = dp[x][previousSet] & adjacencyMatrix[x][vertex]; //should be matrix
-                    }
+                // states with sets S without vertex v are left as false
+                // states with sets S that only contain the vertex v are left as true
+                if (((1 << vertex) & set) == 0 || (set & ~(1<<vertex)) == 0) { continue; }
+                int previousSet = set & ~(1 << vertex); //(S-{c})
+                for (int x = 0; x < numVertices; ++x) {
+                    //The critical recursive step.
+                    dp[set][vertex] = dp[previousSet][x] & adjacencyMatrix[x][vertex];
+                    if (dp[set][vertex]) break;
                 }
             }
         }
-
         boolean hamiltonianExists = false;
         for (int vertex = 0; vertex < numVertices; ++vertex) {
-            if (dp[vertex][numSets - 1]) {
+            if (dp[numSets - 1][vertex]) {
                 hamiltonianExists = true;
                 break;
             }
         }
 
+        //Back tracing hamiltonian path
         String[] hamiltonianPath;
         if (hamiltonianExists) {
             hamiltonianPath = new String[numVertices];
             int set = numSets - 1;
             for (int i = 0; i < numVertices; ++i) {
                 for (int j = 0; j < numVertices; ++j) {
-                    if (dp[j][set]) {
+                    if (dp[set][j]) {
                         hamiltonianPath[numVertices - 1 - i] = intToStrMap.get(j);
                         set = set & ~(1<<j);
                         break;
