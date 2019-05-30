@@ -13,7 +13,7 @@ public class getCentersTest {
     private MyCITS2200Project graph20;
     private MyCITS2200Project graph21;
     private MyCITS2200Project graph22;
-//    private MyCITS2200Project graph23;
+    private MyCITS2200Project graph23;
 //    private MyCITS2200Project graph24;
 //    private MyCITS2200Project graph25;
 
@@ -25,7 +25,7 @@ public class getCentersTest {
         graph20 = new MyCITS2200Project();
         graph21 = new MyCITS2200Project();
         graph22 = new MyCITS2200Project();
-//        graph23 = new MyCITS2200Project();
+        graph23 = new MyCITS2200Project();
 //        graph24 = new MyCITS2200Project();
 //        graph25 = new MyCITS2200Project();
 
@@ -35,7 +35,7 @@ public class getCentersTest {
         CITS2200ProjectTester.loadEdges(graph20, pathBase + 20 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph21, pathBase + 21 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph22, pathBase + 22 + pathSuffix);
-//        CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
+        CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph24, pathBase + 24 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph25, pathBase + 25 + pathSuffix);
     }
@@ -59,5 +59,12 @@ public class getCentersTest {
         assertThat(graph22.getCenters()).isEqualTo(string2);
     }
 
+    @Test
+    @DisplayName("No Center")
+    public void testNoCenter() {
+        String[] string1 = {};
+
+        assertThat(graph23.getCenters()).isEqualTo(string1);
+    }
 }
 
