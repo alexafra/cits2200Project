@@ -574,6 +574,7 @@ public class MyCITS2200Project implements CITS2200Project {
      */
     public boolean isStringArrayHamiltonianPath(String[] hamiltonianPath) {
         if (hamiltonianPath.length == 0) return true; //give benefit of doubt, cant linearly check this case.
+        if (hamiltonianPath.length != adjacencyList.size()) return false;
         for (int i = 0; i < hamiltonianPath.length - 1; i ++) {
             String firstUrl = hamiltonianPath[i];
             String lastUrl = hamiltonianPath[i + 1];
@@ -595,7 +596,15 @@ public class MyCITS2200Project implements CITS2200Project {
                 return false;
             }
         }
-        return true;
+
+
+        boolean noDuplicates=true;
+        for (int i = 0; i < hamiltonianPath.length; i++)
+            for (int j =  i + 1; j < hamiltonianPath.length; j++)
+                if (i != j && hamiltonianPath[i] == hamiltonianPath[j])
+                    noDuplicates = false;
+
+        return noDuplicates;
     }
 
     //Bellow is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
