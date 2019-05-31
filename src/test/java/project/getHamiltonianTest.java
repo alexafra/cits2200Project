@@ -43,7 +43,7 @@ public class getHamiltonianTest {
     @DisplayName("Test Graph With Hamiltonian")
     public void testHasHamiltonian() {
 
-//        //Possible Hamiltonian path for this one...IF IT DOESNT PASS, JUST CHECK THAT IT CONTAINS digits 0-6.
+        //Possible Hamiltonian path for this one...IF IT DOESNT PASS, JUST CHECK THAT IT CONTAINS digits 0-6.
 //        //Any combination will do
 //        String[] string1 = new String[] {"0", "1", "2", "3", "4", "5", "6"};
 ////
@@ -124,11 +124,7 @@ public class getHamiltonianTest {
 
         CITS2200Project graph = new MyCITS2200Project();
         for (int i = 0; i < 20; ++i) {
-            for (int j = 0; j < i; j++) {
-                if (i == j) continue;
-                graph1.addEdge(String.valueOf('a' + i), String.valueOf ('a' + j));
-                graph1.addEdge(String.valueOf('a' + j), String.valueOf ('a' + i));
-            }
+            graph1.addEdge(String.valueOf('a' + i), String.valueOf ('a' + i + 1));
             long start1 = System.nanoTime();
             graph1.getHamiltonianPath();
             long finish1 = System.nanoTime();

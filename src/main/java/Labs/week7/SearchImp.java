@@ -183,7 +183,6 @@ public class SearchImp implements Search {
             //grey pop (colour is 1) signals finish time
             //black pop (colour is 2) signals to ignore
             if (colour[current] == 0) {
-                times[current][0] = time++;
                 colour[current] = 1;
                 s.push(current);
                 int[] currentEdges = edgeMatrix[current];
@@ -194,10 +193,26 @@ public class SearchImp implements Search {
                     }
                 }
             } else if (colour[current] == 1) {
-                times[current][1] = time++;
                 colour[current] = 2;
             }
         }
+        return times;
+    }
+
+    //Have you got this covered for weighted graphs??????
+    private int[][] DFSRecursive2(Graph var1, int current, int[] colour, int[] parent, int [][] times) {
+        int[][] edgeMatrix = var1.getEdgeMatrix();
+        int numVertices = var1.getNumberOfVertices();
+
+        colour[current] = 1;
+        int[] adjacentVertices = edgeMatrix[current];
+        for (int i = 0; i < numVertices; i++) {
+            if (adjacentVertices[i] == 1 && colour[i] == 0) { //You are still DFSing white nodes
+                DFSRecursive(var1, i, colour, parent, times);
+            }
+        }
+        colour[current] = 2;
+
         return times;
     }
 }
