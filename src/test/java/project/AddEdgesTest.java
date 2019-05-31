@@ -37,7 +37,7 @@ public class AddEdgesTest {
 
     @BeforeEach
     public void init () {
-        graph0 = new MyCITS2200Project();
+        //graph0 = new MyCITS2200Project();
         graph1 = new MyCITS2200Project();
         graph2 = new MyCITS2200Project();
         graph3 = new MyCITS2200Project();
@@ -54,7 +54,13 @@ public class AddEdgesTest {
         pathBase = "src/test/projectTestData/edge";
         pathSuffix = ".txt";
 
-        CITS2200ProjectTester.loadEdges(graph0, pathBase + 0 + pathSuffix);
+        //long startTime = System.nanoTime();
+
+        //CITS2200ProjectTester.loadEdges(graph0, pathBase + 0 + pathSuffix);
+
+//        long estimatedTime = System.nanoTime() - startTime;
+//        System.out.println(estimatedTime);
+
         CITS2200ProjectTester.loadEdges(graph1, pathBase + 1 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph2, pathBase + 2 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph3, pathBase + 3 + pathSuffix);
@@ -71,6 +77,19 @@ public class AddEdgesTest {
     @Test
     @DisplayName("Test Empty graph")
     public void testAddEdgesEmpty () {
+
+        graph0 = new MyCITS2200Project();
+
+        pathBase = "src/test/projectTestData/edge";
+        pathSuffix = ".txt";
+
+        long startTime = System.nanoTime();
+
+        CITS2200ProjectTester.loadEdges(graph0, pathBase + 0 + pathSuffix);
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
+
         assertThat(graph0.adjacencyList.size()).isEqualTo(0);
         assertThat(graph0.edgeMatrix).isEqualTo(new int[0][0]);
         assertThat(graph0.intToStrMap.size()).isEqualTo(0);
