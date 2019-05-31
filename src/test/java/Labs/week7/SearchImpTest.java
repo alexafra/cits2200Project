@@ -395,4 +395,32 @@ public class SearchImpTest {
         System.out.println();
         assertThat(times6).isEqualTo(expectedArray6);
     }
+
+    //No. Vertices, directed, density, range
+    @Test
+    @DisplayName("Test get times Recursive")
+    public void testBigRecursiveAndIteratie() {
+        //No Nodes
+        for ( int i = 1; i < 100; i ++) {
+            int noNodes = 500 * i;
+            Graph graph7 = Graph.randomWeightedGraph(noNodes,true, 0.1, 1);
+            long startRec = System.nanoTime();
+            int[][] timesRec = search.getTimes2(graph1, 0);
+            long endRec = System.nanoTime();
+            double recursiveTime = (double)(endRec - startRec) / 1000000;
+
+            long startIt = System.nanoTime();
+            int[][] timesIt = search.getTimes(graph1, 0);
+            long endIt = System.nanoTime();
+            double iterativeTime = (double)(endIt - startIt) / 1000000;
+
+            System.out.println("No. Nodes: " +noNodes);
+            System.out.println("Recursive time is: " + recursiveTime + "ms.");
+            System.out.println("Iterative time is: " +  iterativeTime + "ms.");
+            System.out.println();
+        }
+
+
+    }
+
 }

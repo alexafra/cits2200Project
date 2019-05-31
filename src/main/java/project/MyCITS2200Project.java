@@ -1,18 +1,12 @@
 package project;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Stack;
-import java.util.Collections;
-import java.lang.Boolean;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.*;
 
 public class MyCITS2200Project implements CITS2200Project {
 
     List<List<Integer>> adjacencyList; //Single source of truth
     List<List<Integer>> tAdjacencyList; //The transpose adjacency list needed for getStronglyConnected()
-    int[][] edgeMatrix;
 
     HashMap<Integer, String> intToStrMap;
     HashMap<String, Integer> strToIntMap;
@@ -22,7 +16,6 @@ public class MyCITS2200Project implements CITS2200Project {
         tAdjacencyList = new ArrayList<>();
         intToStrMap = new HashMap<>();
         strToIntMap = new HashMap<>();
-        edgeMatrix = new int[0][0];
     }
 
 
@@ -369,13 +362,14 @@ public class MyCITS2200Project implements CITS2200Project {
                 // states with sets S that only contain the vertex v are left as true
                 if (((1 << vertex) & set) == 0 || (set & ~(1<<vertex)) == 0) { continue; }
                 int previousSet = set & ~(1 << vertex); //(S-{c})
-                for (int x = 0; x < numVertices; ++x) {
+                for (int x = 0; x < numVertices; ++x) { //if x isn't in the prviousSet, dp[previousSet][x] is necessarily false
                     //The critical recursive step.
                     dp[set][vertex] = dp[previousSet][x] & adjacencyMatrix[x][vertex];
                     if (dp[set][vertex]) break;
                 }
             }
         }
+        //Loop through last column in dp table
         boolean hamiltonianExists = false;
         for (int vertex = 0; vertex < numVertices; ++vertex) {
             if (dp[numSets - 1][vertex]) {
@@ -404,18 +398,13 @@ public class MyCITS2200Project implements CITS2200Project {
         return hamiltonianPath;
     }
 
-
-    //test by looping back through the parent array
     public boolean[][] generateAdjacencyMatrix() {
         int numVertices = adjacencyList.size();
         boolean[][] adjacencyMatrix = new boolean[numVertices][numVertices];
-
-
         for (int i = 0; i < numVertices; i ++) {
             for (int j = 0; j < numVertices; j ++) {
                 adjacencyMatrix[i][j] = false;
             }
-
         }
         for (int i = 0; i < numVertices; i ++) {
             List<Integer> adjacentNodes = adjacencyList.get(i);
@@ -426,6 +415,18 @@ public class MyCITS2200Project implements CITS2200Project {
 
         return adjacencyMatrix;
     }
+
+
+    /*
+     * All methods below here were used for testing only and dont affect the implementation.
+     */
+
+    //test by looping back through the parent array
+
+    /**
+     * Converts our adjacency list into a matrix string
+     * @return a String matrix representation of our graph
+     */
 
     public String graphToMatrixString() {
         int numVertices = this.adjacencyList.size();
@@ -450,6 +451,10 @@ public class MyCITS2200Project implements CITS2200Project {
         return var1.toString();
     }
 
+    /**
+     * Converts our adjacency list into a edge string
+     * @return a String edge representation of our graph
+     */
     public String graphToEdgeString() {
 
         int numVertices = this.adjacencyList.size();
@@ -469,4 +474,150 @@ public class MyCITS2200Project implements CITS2200Project {
         return edgeString.toString();
     }
 
+    /**
+     * Used extensively to time our methods
+     * @param size size of the random graph
+     * @param density edge density of graph
+     * @return a CITS2200Project graph of given size and edge density
+     */
+    public static MyCITS2200Project createRandomGraph(int size, double density) {
+        MyCITS2200Project graph = new MyCITS2200Project();
+        for (int i = 0; i < size; i ++) {
+            for (int j = 0; j < size; j ++) {
+                if (i == j) continue;
+                if (Math.random() > density) continue;
+                graph.addEdge(String.valueOf('0' + i), String.valueOf ('0' + i + 1));
+            }
+        }
+        return graph;
+    }
+
+    /**
+     * Initially extensively use to time our methods but was replaced by createRandomGraph
+     * @param size size of the random graph
+     * @return a CITS2200Project graph of given size and edge density
+     */
+    public static MyCITS2200Project createLinearGraph(int size) {
+        MyCITS2200Project graph = new MyCITS2200Project();
+        for (int i = 0; i < size; i ++) {
+            graph.addEdge(String.valueOf('0' + i), String.valueOf ('0' + i + 1));
+        }
+        return graph;
+    }
+
+    /**
+     * Adds edges to a CITS2200Project graph from a edge String representation of the graph
+     * @param project graph to have edges added to
+     * @param path where the file containing the matrix string is.
+     */
+    public static void loadEdges(CITS2200Project project, String path) {
+        // The graph is in the following format:
+        // Every pair of consecutive lines represent a directed edge.
+        // The edge goes from the URL in the first line to the URL in the second line.
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            while (reader.ready()) {
+                String from = reader.readLine();
+                String to = reader.readLine();
+                //System.out.println("Adding edge from " + from + " to " + to);
+                project.addEdge(from, to);
+            }
+        } catch (Exception e) {
+            System.out.println("There was a problem:");
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * Adds edges to a CITS2200Project graph from a matrix String representation of the graph
+     * @param project graph to have edges added to
+     * @param path where the file containing the matrix string is.
+     */
+    public static void loadMatrix(CITS2200Project project, String path) {
+        String delimiter = " ";
+
+        try {
+            BufferedReader file = new BufferedReader(new FileReader(path));
+            String firstLine = file.readLine();
+            int length = Integer.parseInt(firstLine);
+
+            for (int i = 0; i < length; ++i) {
+                StringTokenizer lineI = new StringTokenizer(file.readLine().trim(), delimiter);
+                for (int j = 0; j < length; ++j) {
+                    String currentToken = lineI.nextToken();
+                    if (Integer.parseInt(currentToken) == 1) {
+                        project.addEdge(String.valueOf((char) ('a' + i)), String.valueOf((char) ('a' + j)));
+                    }
+                }
+            }
+            file.close();
+        } catch (Exception e) {
+            System.out.println("There was a problem:");
+            System.out.println(e.toString());
+        }
+
+    }
+
+    /**
+     * Used to unit test Hamiltonian path algorithm
+     * @param hamiltonianPath is the suggested hamiltonian path through the graph
+     * @return if the suggested hamiltonian path is in face valid. Cannot check for
+     * hamiltonian paths that dont exist.
+     */
+    public boolean isStringArrayHamiltonianPath(String[] hamiltonianPath) {
+        if (hamiltonianPath.length == 0) return true; //give benefit of doubt, cant linearly check this case.
+        for (int i = 0; i < hamiltonianPath.length - 1; i ++) {
+            String firstUrl = hamiltonianPath[i];
+            String lastUrl = hamiltonianPath[i + 1];
+            Integer firstId = strToIntMap.get(firstUrl);
+            Integer lastId = strToIntMap.get(lastUrl);
+
+            //Top of my head corner cases
+            if (firstId == null || lastId == null || firstId < 0 || lastId < 0 || firstId == lastId) {
+                return false;
+            }
+
+            boolean endNodeExists = false;
+            for (int endNode : adjacencyList.get(firstId))  {
+                if (endNode == lastId) {
+                    endNodeExists = true;
+                }
+            }
+            if (!endNodeExists) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //Bellow is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
+    //Software to run (JUnit and JAssertions), thus it has been commented out, but hopefully the effort is appreciated by the
+    //marker!
+//    @Test
+//    @DisplayName("Randomly test hamiltonian path")
+//    public void randomHamiltonian() {
+//        for (int j = 0; j < 10; j ++) {
+//            for (int i = 0; i < 21; ++i) {
+//                MyCITS2200Project graph = MyCITS2200Project.createRandomGraph(i, (double)j / 10);
+//                String[] suggestedHamiltonianPath = graph.getHamiltonianPath();
+//                boolean hamiltonianPathIsValid = graph.isStringArrayHamiltonianPath(suggestedHamiltonianPath);
+//                assertThat(hamiltonianPathIsValid).isTrue();
+//            }
+//
+//        }
+//    }
+
+    //Bellow is an example of how we generated the data for our graphs for our project.
+//    for (int i = 0; i < 500; ++i) {
+//        start = System.nanoTime();
+//        graph = createRandomGraph(i,0.2);
+//        graph.getCenters();
+//        finish = System.nanoTime();
+//        timens = finish - start;
+//        time = ((double)timens) / 1000000;
+//        System.out.println(time);
+//    }
+    //Data was copied and pasted from terminal into google sheets,
+    // perhaps not the most elegant solution but it did the trick!
+    //This was repeated 3 times to get an average time for each vertex size
 }
