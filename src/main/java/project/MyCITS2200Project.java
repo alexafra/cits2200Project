@@ -407,13 +407,10 @@ public class MyCITS2200Project implements CITS2200Project {
     public boolean[][] generateAdjacencyMatrix() {
         int numVertices = adjacencyList.size();
         boolean[][] adjacencyMatrix = new boolean[numVertices][numVertices];
-
-
         for (int i = 0; i < numVertices; i ++) {
             for (int j = 0; j < numVertices; j ++) {
                 adjacencyMatrix[i][j] = false;
             }
-
         }
         for (int i = 0; i < numVertices; i ++) {
             List<Integer> adjacentNodes = adjacencyList.get(i);

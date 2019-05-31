@@ -108,6 +108,7 @@ public class Graph {
         return randomGraph(var0, false, var1);
     }
 
+    //No. Vertices, directed, density, range
     public static Graph randomWeightedGraph(int var0, boolean var1, double var2, int var4) {
         Graph var5 = new Graph(var0, true, var1);
 

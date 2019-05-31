@@ -102,9 +102,12 @@ public class getShortestPathTest {
     @Test
     @DisplayName("Test Empty Graph")
     public void testEmpty() {
+        long startTime = System.nanoTime();
         assertThat(graph16.getShortestPath("a", "b")).isEqualTo(-1);
-    }
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println(estimatedTime);
 
+    }
 
 
 }
