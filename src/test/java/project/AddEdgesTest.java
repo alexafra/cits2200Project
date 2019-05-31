@@ -72,7 +72,6 @@ public class AddEdgesTest {
     @DisplayName("Test Empty graph")
     public void testAddEdgesEmpty () {
         assertThat(graph0.adjacencyList.size()).isEqualTo(0);
-        assertThat(graph0.edgeMatrix).isEqualTo(new int[0][0]);
         assertThat(graph0.intToStrMap.size()).isEqualTo(0);
         assertThat(graph0.strToIntMap.size()).isEqualTo(0);
     }
@@ -81,7 +80,6 @@ public class AddEdgesTest {
     @DisplayName("Test Single Node graph")
     public void testAddEdgesSingle() {
         assertThat(graph1.adjacencyList.size()).isEqualTo(0);
-        assertThat(graph1.edgeMatrix).isEqualTo(new int[0][0]);
         assertThat(graph1.intToStrMap.size()).isEqualTo(0);
         assertThat(graph1.strToIntMap.size()).isEqualTo(0);
     }

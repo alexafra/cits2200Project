@@ -12,7 +12,6 @@ public class MyCITS2200Project implements CITS2200Project {
 
     List<List<Integer>> adjacencyList; //Single source of truth
     List<List<Integer>> tAdjacencyList; //The transpose adjacency list needed for getStronglyConnected()
-    int[][] edgeMatrix;
 
     HashMap<Integer, String> intToStrMap;
     HashMap<String, Integer> strToIntMap;
@@ -22,7 +21,6 @@ public class MyCITS2200Project implements CITS2200Project {
         tAdjacencyList = new ArrayList<>();
         intToStrMap = new HashMap<>();
         strToIntMap = new HashMap<>();
-        edgeMatrix = new int[0][0];
     }
 
 
@@ -369,7 +367,7 @@ public class MyCITS2200Project implements CITS2200Project {
                 // states with sets S that only contain the vertex v are left as true
                 if (((1 << vertex) & set) == 0 || (set & ~(1<<vertex)) == 0) { continue; }
                 int previousSet = set & ~(1 << vertex); //(S-{c})
-                for (int x = 0; x < numVertices; ++x) {
+                for (int x = 0; x < numVertices && ((1 << x) & set) != 0; ++x) { //if x isn't in the prviousSet, dp[previousSet][x] is necessarily false
                     //The critical recursive step.
                     dp[set][vertex] = dp[previousSet][x] & adjacencyMatrix[x][vertex];
                     if (dp[set][vertex]) break;

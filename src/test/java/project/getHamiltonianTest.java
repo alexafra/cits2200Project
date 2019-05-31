@@ -116,31 +116,150 @@ public class getHamiltonianTest {
         //20 1.821 s
         //19 930ms
 
+        CITS2200Project graph1 = new MyCITS2200Project();
+        CITS2200Project graph2 = new MyCITS2200Project();
+        CITS2200Project graph3 = new MyCITS2200Project();
+        CITS2200Project graph4 = new MyCITS2200Project();
+        CITS2200Project graph5 = new MyCITS2200Project();
 
         CITS2200Project graph = new MyCITS2200Project();
-        graph.addEdge("a", "b");
-        graph.addEdge("b", "c");
-        graph.addEdge("c", "d");
-        graph.addEdge("d", "e");
-        graph.addEdge("e", "f");
-        graph.addEdge("f", "g");
-        graph.addEdge("g", "h");
-        graph.addEdge("h", "i");
-        graph.addEdge("i", "j");
-        graph.addEdge("j", "k");
-        graph.addEdge("k", "l");
-        graph.addEdge("l", "m");
-        graph.addEdge("m", "n");
-        graph.addEdge("n", "o");
-        graph.addEdge("o", "p");
-        graph.addEdge("p", "q");
-        graph.addEdge("q", "r");
-        graph.addEdge("r", "s");
-        graph.addEdge("s", "t");
-        graph.addEdge("t", "u");
+        for (int i = 0; i < 20; ++i) {
+            for (int j = 0; j < i; j++) {
+                if (i == j) continue;
+                graph1.addEdge(String.valueOf('a' + i), String.valueOf ('a' + j));
+                graph1.addEdge(String.valueOf('a' + j), String.valueOf ('a' + i));
+            }
+            long start1 = System.nanoTime();
+            graph1.getHamiltonianPath();
+            long finish1 = System.nanoTime();
+            long timens1 = finish1 - start1;
+            double time1 = ((double)timens1) / 1000000;
+            System.out.println(time1);
+        }
 
-        String[] expectedPath = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"};
-        assertThat(graph.getHamiltonianPath()).isEqualTo(expectedPath);
+//            System.out.println("n: " + (i + 1) + "  time: " + time1 + "ms.");
+
+
+
+
+//        graph1.addEdge("a", "b"); //1
+//        graph1.addEdge("b", "c");
+//        graph1.addEdge("c", "d");
+//        graph1.addEdge("d", "e");
+//
+//        graph2.addEdge("a", "b"); //1
+//        graph2.addEdge("b", "c");
+//        graph2.addEdge("c", "d");
+//        graph2.addEdge("d", "e");
+//        graph2.addEdge("e", "f"); //5
+//        graph2.addEdge("f", "g");
+//        graph2.addEdge("g", "h");
+//        graph2.addEdge("h", "i");
+//        graph2.addEdge("i", "j");
+//
+//        graph3.addEdge("a", "b"); //1
+//        graph3.addEdge("b", "c");
+//        graph3.addEdge("c", "d");
+//        graph3.addEdge("d", "e");
+//        graph3.addEdge("e", "f"); //5
+//        graph3.addEdge("f", "g");
+//        graph3.addEdge("g", "h");
+//        graph3.addEdge("h", "i");
+//        graph3.addEdge("i", "j");
+//        graph3.addEdge("j", "k"); //10
+//        graph3.addEdge("k", "l");
+//        graph3.addEdge("l", "m");
+//        graph3.addEdge("m", "n");
+//        graph3.addEdge("n", "o");
+//
+//        graph4.addEdge("a", "b"); //1
+//        graph4.addEdge("b", "c");
+//        graph4.addEdge("c", "d");
+//        graph4.addEdge("d", "e");
+//        graph4.addEdge("e", "f"); //5
+//        graph4.addEdge("f", "g");
+//        graph4.addEdge("g", "h");
+//        graph4.addEdge("h", "i");
+//        graph4.addEdge("i", "j");
+//        graph4.addEdge("j", "k"); //10
+//        graph4.addEdge("k", "l");
+//        graph4.addEdge("l", "m");
+//        graph4.addEdge("m", "n");
+//        graph4.addEdge("n", "o");
+//        graph4.addEdge("o", "p"); //15
+//        graph4.addEdge("p", "q");
+//        graph4.addEdge("q", "r");
+//        graph4.addEdge("r", "s");
+//        graph4.addEdge("s", "t");
+//        graph4.addEdge("t", "u"); //20
+//
+//        graph5.addEdge("a", "b"); //1
+//        graph5.addEdge("b", "c");
+//        graph5.addEdge("c", "d");
+//        graph5.addEdge("d", "e");
+//        graph5.addEdge("e", "f"); //5
+//        graph5.addEdge("f", "g");
+//        graph5.addEdge("g", "h");
+//        graph5.addEdge("h", "i");
+//        graph5.addEdge("i", "j");
+//        graph5.addEdge("j", "k"); //10
+//        graph5.addEdge("k", "l");
+//        graph5.addEdge("l", "m");
+//        graph5.addEdge("m", "n");
+//        graph5.addEdge("n", "o");
+//        graph5.addEdge("o", "p"); //15
+//        graph5.addEdge("p", "q");
+//        graph5.addEdge("q", "r");
+//        graph5.addEdge("r", "s");
+//        graph5.addEdge("s", "t");// 19
+//
+//        String[] expectedPath1 = {"a", "b", "c", "d", "e"};
+//        String[] expectedPath2 = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+//        String[] expectedPath3 = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"};
+//        String[] expectedPath4 = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"};
+//
+//        long start1 = System.nanoTime();
+//        graph1.getHamiltonianPath();
+//        long finish1 = System.nanoTime();
+//
+//        long start2 = System.nanoTime();
+//        graph2.getHamiltonianPath();
+//        long finish2 = System.nanoTime();
+//        long start3 = System.nanoTime();
+//        graph3.getHamiltonianPath();
+//        long finish3 = System.nanoTime();
+//        long start4 = System.nanoTime();
+//        graph4.getHamiltonianPath();
+//        long finish4 = System.nanoTime();
+//        long start5 = System.nanoTime();
+//        graph5.getHamiltonianPath();
+//        long finish5 = System.nanoTime();
+//
+//        long timens1 = finish1 - start1;
+//        double time1 = ((double)timens1) / 1000000;
+//
+//        long timens2 = finish2 - start2;
+//        double time2 = ((double)timens2) / 1000000;
+//
+//        long timens3 = finish3 - start3;
+//        double time3 = ((double)timens3) / 1000000;
+//
+//        long timens4 = finish4 - start4;
+//        double time4 = ((double)timens4) / 1000000;
+//
+//        long timens5 = finish5 - start5;
+//        double time5 = ((double)timens5) / 1000000;
+//
+//        System.out.println("size 5, time is: " + time1 + "ms.");
+//        System.out.println("size 10, time is: " + time2 + "ms.");
+//        System.out.println("size 15, time is: " + time3 + "ms.");
+//        System.out.println("size 19, time is: " + time4 + "ms.");
+//        System.out.println("size 20, time is: " + time5 + "ms.");
+
+
+
+
+//        assertThat(graph.getHamiltonianPath()).isEqualTo(expectedPath1);
     }
 
 
