@@ -590,8 +590,8 @@ public class MyCITS2200Project implements CITS2200Project {
         return true;
     }
 
-    //Below is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
-    //Software to run, thus it has been commented out, but hopefully the effort is appreciated by the
+    //Bellow is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
+    //Software to run (JUnit and JAssertions), thus it has been commented out, but hopefully the effort is appreciated by the
     //marker!
 //    @Test
 //    @DisplayName("Randomly test hamiltonian path")
@@ -606,4 +606,18 @@ public class MyCITS2200Project implements CITS2200Project {
 //
 //        }
 //    }
+
+    //Bellow is an example of how we generated the data for our graphs for our project.
+//    for (int i = 0; i < 500; ++i) {
+//        start = System.nanoTime();
+//        graph = createRandomGraph(i,0.2);
+//        graph.getCenters();
+//        finish = System.nanoTime();
+//        timens = finish - start;
+//        time = ((double)timens) / 1000000;
+//        System.out.println(time);
+//    }
+    //Data was copied and pasted from terminal into google sheets,
+    // perhaps not the most elegant solution but it did the trick!
+    //This was repeated 3 times to get an average time for each vertex size
 }

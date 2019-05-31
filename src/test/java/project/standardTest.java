@@ -60,10 +60,6 @@ public class standardTest {
     @DisplayName("Test Strongly Connected")
     public void testStronglyConnected() {
 
-        //ANOTHER DUMMY STRING, BUT YOU CAN CHECK THE OUPUT AGAINST WHAT OTHER PEOPLE HAVE GOT IN THE FORUM
-        // see link: https://secure.csse.uwa.edu.au/run/help2200?p=np&a=417&all=y9
-        String[][] string2 = new String[][] {{"d", "c"},{"b", "a"}};
-
-        assertThat(graph.getStronglyConnectedComponents()).isEqualTo(string2);
+//        //ANOTHER DUMMY S getStronglyConnectedComponents()).isEqualTo(string2);
     }
 }
