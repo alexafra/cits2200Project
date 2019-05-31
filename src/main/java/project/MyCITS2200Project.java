@@ -1,7 +1,14 @@
 package project;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.Collections;
 
 public class MyCITS2200Project implements CITS2200Project {
 
@@ -27,32 +34,29 @@ public class MyCITS2200Project implements CITS2200Project {
      * @param urlTo the URL which urlFrom has a link to.
      */
 
-    //Strings are keys or ints are keys. I think strings.
-    //O(1) method
-    public void addEdge(String urlFrom, String urlTo) { //cant test multiple, can test singles
+
+    public void addEdge(String urlFrom, String urlTo) {
         if (urlFrom == null || urlTo == null || urlFrom.equals("") || urlTo.equals("")) { return; }
 
-        Integer intFrom = strToIntMap.get(urlFrom);                         //O(1)
+        Integer intFrom = strToIntMap.get(urlFrom);
         if (intFrom == null) {
-            intFrom = intToStrMap.size(); //we can use size because we are never deleting edges
-            intToStrMap.put(intFrom, urlFrom); //therefore we can assume the number mappings are 0 -> size() - 1
-            strToIntMap.put(urlFrom, intFrom); //it will also correspond to i in the edgeMatrix and i in
+            intFrom = intToStrMap.size();           //we can use size because we are never deleting edges
+            intToStrMap.put(intFrom, urlFrom);      //therefore we can assume the number mappings are 0 -> size() - 1
+            strToIntMap.put(urlFrom, intFrom);      //It will also correspond to i in the edgeMatrix and i in
             adjacencyList.add(new ArrayList<>(5));// the primary adjacencyList so we can use the key as the index
             tAdjacencyList.add(new ArrayList<>(5));
         }
-        Integer intTo = strToIntMap.get(urlTo);                             //O(1) Integer intTo = strToIntMap.get(urlTo);                             //O(1)
+        Integer intTo = strToIntMap.get(urlTo);
         if (intTo == null) {
-            intTo = strToIntMap.size();                                     //O(1)
-            intToStrMap.put(intTo, urlTo);                                  //O(1)
-            strToIntMap.put(urlTo, intTo);                                  //O(1)
-            adjacencyList.add(new ArrayList<>(5)); //O(1)??
+            intTo = strToIntMap.size();
+            intToStrMap.put(intTo, urlTo);
+            strToIntMap.put(urlTo, intTo);
+            adjacencyList.add(new ArrayList<>(5));
             tAdjacencyList.add(new ArrayList<>(5));
         }
 
-        adjacencyList.get(intFrom).add(intTo);                              //O(1) + O(1)
+        adjacencyList.get(intFrom).add(intTo);
         tAdjacencyList.get(intTo).add(intFrom);     //add the opposite of the original adjacencyList
-        //ALEX IF YOU THINK THIS IS INEFFICIENT, TO ADD EVERYTHING TO THE transposeAdjacencyList, THEN SEE IF YOU CAN
-        //THINK OF A WAY TO COMPUTE A TRANSPOSE FROM THE ORIGINAL ADJACENCY LIST
     }
 
     /**
@@ -63,60 +67,52 @@ public class MyCITS2200Project implements CITS2200Project {
      * @param urlTo the URL where the path should end.
      * @return the legnth of the shorest path in number of links followed.
      */
-    public int getShortestPath(String urlFrom, String urlTo) {              //how to test this? maybe use other code.
-        Integer source = strToIntMap.get(urlFrom);                          //O(1)
-        Integer destination = strToIntMap.get(urlTo);                       //O(1)
+    public int getShortestPath(String urlFrom, String urlTo) {
+        Integer source = strToIntMap.get(urlFrom);
+        Integer destination = strToIntMap.get(urlTo);
 
         //If the urls are not in the graph
-        if (source == null || destination == null) {                        //O(1)
-            return -1;                                                      //O(1)
+        if (source == null || destination == null) {
+            return -1;
         }
 
-        int numVertices = this.adjacencyList.size();                        //O(1) Pretty sure
+        int numVertices = this.adjacencyList.size();
 
-        int[] distances = new int[numVertices];                             //O(V)
-        int[] parent = new int[numVertices];                                //O(V)
+        int[] distances = new int[numVertices];
 
-        int[] colour = new int[numVertices];                                //O(V)
+        int[] colour = new int[numVertices];
 
-        for (int i = 0; i < parent.length; i ++) {                          //O(2 * V) = O(v)
-            distances[i] = -1;                                              //O(1)
+        for (int i = 0; i < distances.length; i ++) {
+            distances[i] = -1;
             colour[i] = 0;
         }
 
-        //this queue is the primary data structure used in this method.
-        //O(1) operations when accessing the ends and no priority
-        Queue<Integer> queue = new LinkedList<Integer>();                   // O(1)
+        Queue<Integer> queue = new LinkedList<Integer>();
 
-        queue.add(source);                                                  //O(1) because queue is empty
-        colour[source] = 1;                                                 //O(1)
-        distances[source] = 0;                                              //O(1)
+        queue.add(source);
+        colour[source] = 1;
+        distances[source] = 0;
 
-        while (!queue.isEmpty()) {                                          //O(V) * {}
-            int current = queue.remove();                                       //O(log (1))
-            if (current == destination) {                                       //O(1)
-                return distances[current];                                      //O(1)
+        while (!queue.isEmpty()) {
+            int current = queue.remove();
+            if (current == destination) {
+                return distances[current];
             }
-            List<Integer> adjacentVertices = adjacencyList.get(current);        //O(1)
+            List<Integer> adjacentVertices = adjacencyList.get(current);
             int numEdges = adjacentVertices.size();
-            for (int i = 0; i < numEdges; i++) {                               //O(|E|) * {}
-                int adjacent = adjacentVertices.get(i);                                     //O(1)
-                if (colour[adjacent] == 0) {                                               //O(1)
-                    colour[adjacent] = 1;                                                  //O(1)
-                    distances[adjacent] = distances[current] + 1;                          //O(1)
-                    queue.add(adjacent);                                                   //O(log(1)),
-                    //{} =  O((4*O(1)) = O(log(1))
-                }                                                               //=> O(E)
+            for (int i = 0; i < numEdges; i++) {
+                int adjacent = adjacentVertices.get(i);
+                if (colour[adjacent] == 0) {
+                    colour[adjacent] = 1;
+                    distances[adjacent] = distances[current] + 1;
+                    queue.add(adjacent);
+                }
             }
-            colour[current] = 2;                                                //O(1)
-        }                                                                   //{} = O(E)
-                                                                            //O(V*E) = O(V^3)
+        }
+
         return -1;
-    }                                                                       //O(1)
-                                                                            //=>O(V*E = O(V^3)
-    //Loosest bound loosest analysis, a closer look will show that each edge is is observed once in O(1) time O(E)
-    //Furthermore each vertex is added to the queue once, taking O(log 1) time and removed once taking O(log(1)) time
-    //Suggesting time taken is O(E + V) => O(2E))
+    }
+
 
     /**
      * Perform a BFS on the graph
@@ -228,7 +224,7 @@ public class MyCITS2200Project implements CITS2200Project {
      * Will add elements to the stack in the correct order and update
      * the visited boolean array
      */
-    public void fillOrder(boolean[] visited, int vertex, Stack stack) {
+    public void fillOrder(boolean[] visited, int vertex, Stack<Integer> stack) {
 
         visited[vertex] = true;
         int size = adjacencyList.get(vertex).size();
@@ -256,7 +252,7 @@ public class MyCITS2200Project implements CITS2200Project {
         List<List<Integer>> stringAList = new ArrayList<>();
         int count = 0;
         int vertex;
-        Stack stack = new Stack();
+        Stack<Integer> stack = new Stack<>();
         //Find the number of vertices in our graph
         int size = adjacencyList.size();
         //Visited will track whether or not we have visited the vertex in the past
@@ -281,7 +277,7 @@ public class MyCITS2200Project implements CITS2200Project {
             vertex = (int)stack.pop();
             if(visited[vertex] == false) {
                 //Create a new ArrayList to hold the current set of SCCs
-                stringAList.add(new ArrayList(5));
+                stringAList.add(new ArrayList<Integer>(5));
                 //This should only exit once it has found all connected+unvisited neighbours, ie SCCs
                 transposeDFS(visited, vertex, stringAList, count);
                 //Increase our count, so we add the next elements to the next ArrayList
@@ -590,7 +586,7 @@ public class MyCITS2200Project implements CITS2200Project {
         return true;
     }
 
-    //Bellow is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
+    //Below is an example of the unit tests we ran on some of the methods. Requires additional 3rd party
     //Software to run (JUnit and JAssertions), thus it has been commented out, but hopefully the effort is appreciated by the
     //marker!
 //    @Test
@@ -607,7 +603,7 @@ public class MyCITS2200Project implements CITS2200Project {
 //        }
 //    }
 
-    //Bellow is an example of how we generated the data for our graphs for our project.
+    //Below is an example of how we generated the data for our graphs for our project.
 //    for (int i = 0; i < 500; ++i) {
 //        start = System.nanoTime();
 //        graph = createRandomGraph(i,0.2);
