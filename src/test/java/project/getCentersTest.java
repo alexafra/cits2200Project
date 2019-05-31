@@ -14,7 +14,7 @@ public class getCentersTest {
     private MyCITS2200Project graph21;
     private MyCITS2200Project graph22;
     private MyCITS2200Project graph23;
-//    private MyCITS2200Project graph24;
+    private MyCITS2200Project graph30;
 //    private MyCITS2200Project graph25;
 
     private String pathBase;
@@ -26,7 +26,7 @@ public class getCentersTest {
         graph21 = new MyCITS2200Project();
         graph22 = new MyCITS2200Project();
         graph23 = new MyCITS2200Project();
-//        graph24 = new MyCITS2200Project();
+        graph30 = new MyCITS2200Project();
 //        graph25 = new MyCITS2200Project();
 
         pathBase = "src/test/projectTestData/edge";
@@ -36,7 +36,7 @@ public class getCentersTest {
         CITS2200ProjectTester.loadEdges(graph21, pathBase + 21 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph22, pathBase + 22 + pathSuffix);
         CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
-//        CITS2200ProjectTester.loadEdges(graph24, pathBase + 24 + pathSuffix);
+//        CITS2200ProjectTester.loadEdges(graph30, pathBase + 30 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph25, pathBase + 25 + pathSuffix);
     }
 
@@ -46,7 +46,11 @@ public class getCentersTest {
 
         String[] string1 = {"a"};
 
+        long startTime = System.nanoTime();
         assertThat(graph20.getCenters()).isEqualTo(string1);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
+
     }
 
     @Test
@@ -55,8 +59,10 @@ public class getCentersTest {
         String[] string1 = {"b"};
         String[] string2 = {"b", "c"};
 
-        assertThat(graph21.getCenters()).isEqualTo(string1);
+
         assertThat(graph22.getCenters()).isEqualTo(string2);
+        assertThat(graph21.getCenters()).isEqualTo(string1);
+
     }
 
     @Test
@@ -64,7 +70,11 @@ public class getCentersTest {
     public void testNoCenter() {
         String[] string1 = {};
 
+        long startTime = System.nanoTime();
         assertThat(graph23.getCenters()).isEqualTo(string1);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
+
     }
 }
 

@@ -30,8 +30,10 @@ public class standardTest {
 
         pathBase = "src/test/projectTestData/edge";
         pathSuffix = ".txt";
-
+        long startTime = System.nanoTime();
         CITS2200ProjectTester.loadEdges(graph, pathBase + "Standard" + pathSuffix);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
 //        CITS2200ProjectTester.loadEdges(graph31, pathBase + 31 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph32, pathBase + 32 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
@@ -52,8 +54,11 @@ public class standardTest {
     public void testGraphCenter() {
 
         String[] string1 = new String[] {"/wiki/Nowhere-zero_flow"};
-
+        long startTime = System.nanoTime();
         assertThat(graph.getCenters()).isEqualTo(string1);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
+
     }
 
     @Test

@@ -32,6 +32,7 @@ public class sampleTest {
         pathSuffix = ".txt";
 
         CITS2200ProjectTester.loadEdges(graph, pathBase + "Sample" + pathSuffix);
+
 //        CITS2200ProjectTester.loadEdges(graph31, pathBase + 31 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph32, pathBase + 32 + pathSuffix);
 //        CITS2200ProjectTester.loadEdges(graph23, pathBase + 23 + pathSuffix);
@@ -53,7 +54,11 @@ public class sampleTest {
 
         String[] string1 = new String[] {"/wiki/Brazil"};
 
+        long startTime = System.nanoTime();
         assertThat(graph.getCenters()).isEqualTo(string1);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Estimated time is:" + estimatedTime);
+
     }
 
     @Test
