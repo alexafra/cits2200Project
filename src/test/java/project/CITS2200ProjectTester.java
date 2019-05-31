@@ -80,7 +80,6 @@ public class CITS2200ProjectTester {
     }
 
 
-
     //Convert a\nb => edgeMatrix
     public static void main(String[] args) {
 

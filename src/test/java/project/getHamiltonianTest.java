@@ -110,6 +110,20 @@ public class getHamiltonianTest {
     }
 
     @Test
+    @DisplayName("Randomly test hamiltonian path")
+    public void randomHamiltonian() {
+        for (int j = 0; j < 10; j ++) {
+            for (int i = 0; i < 21; ++i) {
+                MyCITS2200Project graph = MyCITS2200Project.createRandomGraph(i, (double)j / 10);
+                String[] suggestedHamiltonianPath = graph.getHamiltonianPath();
+                boolean hamiltonianPathIsValid = graph.isStringArrayHamiltonianPath(suggestedHamiltonianPath);
+                assertThat(hamiltonianPathIsValid).isTrue();
+            }
+
+        }
+    }
+
+    @Test
     @DisplayName("Test linear")
     public void testLiearNodes() {
 
